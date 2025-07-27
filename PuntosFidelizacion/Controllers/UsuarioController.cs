@@ -23,7 +23,13 @@ namespace PuntosFidelizacion.Controllers
         public async Task<IActionResult> RedimirPuntos([FromBody] RedimirDto dto)
         {
             if (dto.PuntosARedimir <= 0)
-                return BadRequest("Cantidad de puntos inválida");
+                return BadRequest(new
+                {
+                    errors = new
+                    {
+                        PuntosARedimir = new[] { "Debe ser mayor a cero." }
+                    }
+                });
 
             var usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var usuario = await _context.Usuarios.FindAsync(usuarioId);

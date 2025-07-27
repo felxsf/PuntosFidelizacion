@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PuntosFidelizacion.Data;
 using PuntosFidelizacion.DTOs;
 using PuntosFidelizacion.Models;
+using System.Security.Claims;
 
 namespace PuntosFidelizacion.Controllers
 {
@@ -52,7 +53,10 @@ namespace PuntosFidelizacion.Controllers
         [HttpGet("usuarios")]
         public async Task<IActionResult> VerUsuarios()
         {
+            var correoActual = User.FindFirstValue(ClaimTypes.Email);
+
             var usuarios = await _context.Usuarios
+                .Where(u => u.Correo != correoActual)
                 .Select(u => new
                 {
                     u.Id,
@@ -60,7 +64,8 @@ namespace PuntosFidelizacion.Controllers
                     u.Correo,
                     u.Rol,
                     u.SaldoPuntos
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
             return Ok(usuarios);
         }
