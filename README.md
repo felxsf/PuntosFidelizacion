@@ -1,121 +1,182 @@
-# Sistema de Gestión de Puntos (Programa de Fidelización)
+# 🎁 Sistema de Fidelización de Puntos
 
-Este es un sistema web completo para gestionar un programa de fidelización empresarial, donde los usuarios pueden acumular y redimir puntos, y los administradores pueden otorgar puntos a través de un panel administrativo.
+Este sistema permite a los usuarios acumular, visualizar y canjear puntos por beneficios. Incluye autenticación con JWT, redención de puntos, catálogo de beneficios, historial de transacciones y roles de usuario.
 
 ---
 
-## 🚀 Tecnologías Utilizadas
+## 🧱 Tecnologías Utilizadas
 
-### Backend (.NET)
-- ASP.NET Core Web API (.NET 6+)
-- Entity Framework Core (SQL Server)
-- Autenticación con JWT
+### Backend (API REST - ASP.NET Core)
+- .NET 8
+- Entity Framework Core
+- SQL Server
+- JWT (Json Web Tokens) para autenticación
+- AutoMapper (opcional para DTOs)
 - CORS habilitado
-- Swagger para pruebas
 
-### Frontend (React + Vite)
-- React 18
-- Axios para peticiones HTTP
-- React Router DOM para rutas
-- Context API para manejo de sesión
-- Bootstrap 5 + react-toastify para estilos y notificaciones
-
----
-
-## ⚙️ Funcionalidades
-
-### Usuario Regular (`Rol = 0`)
-- Registro e inicio de sesión
-- Visualización de saldo en puntos y valor monetario
-- Redención de puntos
-- Historial de transacciones
-
-### Administrador (`Rol = 1`)
-- Panel para otorgar puntos a usuarios
-- Listado de usuarios (sin mostrarse a sí mismo)
-- Historial global de transacciones
+### Frontend (SPA - React)
+- React 18 con Hooks
+- Bootstrap 5
+- Axios
+- React Router DOM
+- React Toastify
 
 ---
 
-## 🧑‍💻 Instalación y ejecución local
+## 🚀 Funcionalidades
 
-### Backend
+### 👤 Autenticación
+- Login con validación JWT.
+- Roles por usuario (`Admin`, `Cliente`, etc.).
+- Protecciones con `[Authorize]` en controladores.
 
-1. Abre la solución en Visual Studio.
-2. Revisa el archivo `appsettings.json` con tu cadena de conexión.
-3. Ejecuta las migraciones:
-   ```
-   Add-Migration InitialCreate
-   Update-Database
-   ```
-4. Ejecuta el backend (F5 o Ctrl + F5) y prueba en Swagger (`https://localhost:7000/swagger`).
+### 🎁 Beneficios
+- Listado de beneficios disponibles.
+- Filtros por texto, descripción y rango de puntos.
+- Paginación por 6 elementos por página.
+- Botón de `Canjear` visible solo si el usuario tiene puntos suficientes.
 
-### Frontend
+### 💰 Redención de Puntos
+- Canje de beneficios desde el **Catálogo** o el **Dashboard**.
+- Actualización automática del saldo.
+- Registro visual en el historial de transacciones.
 
-1. Ve a la carpeta del frontend:
-   ```
-   cd puntos-frontend
-   ```
-2. Instala dependencias:
-   ```
-   npm install
-   ```
-3. Ejecuta en modo desarrollo:
-   ```
-   npm run dev
-   ```
+### 📊 Dashboard del Usuario
+- Saldo actual en puntos y su equivalente en pesos.
+- Redención libre de puntos (manual).
+- Transacciones visibles (tipo, puntos, fecha, observación).
+- Visualización de beneficios destacados.
 
 ---
 
-## 🔒 Seguridad
-
-- Los endpoints están protegidos con JWT.
-- Los roles determinan acceso a funcionalidades.
-- Frontend evita acceso a rutas no permitidas con rutas protegidas (`PrivateRoute`) y públicas (`PublicRoute`).
-
----
-
-## ✅ Mejores prácticas aplicadas
-
-- Separación de responsabilidades (auth, usuario, admin)
-- Validación de entrada en backend y frontend
-- Uso de `toast` para mensajes al usuario
-- Protección contra acceso no autorizado
-- Redirección automática según el rol
-
----
-
-## 📦 Despliegue sugerido
-
-- **Frontend**: Vercel o Netlify
-- **Backend**: Azure App Service, Render o Railway
-- **Base de datos**: Azure SQL, Railway, SQL Server local
-
----
-
-## 📁 Estructura de carpetas
+## 🗂 Estructura del Proyecto
 
 ```
 /backend
-  /Controllers
-  /Models
-  /DTOs
-  /Services
-  /Data
-  Program.cs
+  ├── Controllers
+  ├── Data
+  ├── DTOs
+  ├── Helpers
+  ├── Models
+  └── Program.cs
 
 /frontend
-  /src
-    /api
-    /components
-    /context
-    /pages
-    App.jsx
-    main.jsx
+  ├── src/
+      ├── components/
+      ├── context/AuthContext.jsx
+      ├── pages/
+          ├── Dashboard.jsx
+          ├── Catalogo.jsx
+      ├── api/
+          ├── usuario.js
+          ├── beneficio.js
 ```
 
 ---
 
-## 📝 Autor
+## ⚙️ Configuración del Proyecto
 
-Desarrollado por Felix Sanchez Fandiño como solución completa para fidelización de clientes usando tecnologías modernas y buenas prácticas de desarrollo web.
+### 🧪 Base de datos
+
+1. En `appsettings.json`, configura la conexión a SQL Server:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=PuntosFidelizacion;Trusted_Connection=True;"
+}
+```
+
+2. Ejecuta migraciones:
+
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+
+3. Si deseas poblar datos iniciales:
+
+```csharp
+DbInitializer.Seed(context);
+```
+
+---
+
+## ▶️ Iniciar la aplicación
+
+### Backend
+
+```bash
+cd backend
+dotnet run
+```
+
+La API estará disponible en `https://localhost:7000`.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+El cliente estará en `http://localhost:5173`.
+
+---
+
+## 🔒 Autenticación y Seguridad
+
+- Al hacer login exitoso, el token se guarda en `localStorage`.
+- Las llamadas a la API incluyen el `Authorization: Bearer {token}`.
+- El servidor protege rutas usando `[Authorize]`, y opcionalmente `[Authorize(Roles = "0")]`.
+
+---
+
+## 📦 Endpoints Principales
+
+### Usuario
+- `POST /api/Usuario/login`
+- `GET /api/Usuario/saldo`
+- `POST /api/Usuario/canjear`
+- `GET /api/Usuario/historial`
+
+### Beneficio
+- `GET /api/Beneficio`
+- `GET /api/Beneficio/destacados`
+
+---
+
+## 🧪 Datos de prueba
+
+```json
+Usuario: cliente@ejemplo.com
+Contraseña: 123456
+Rol: 0 (Cliente)
+```
+
+---
+
+## 🛠 Manual de Uso
+
+1. **Ingreso al sistema:**
+   - Navega a la URL principal.
+   - Inicia sesión con el usuario de prueba o uno existente.
+
+2. **Dashboard:**
+   - Consulta el saldo actual de puntos.
+   - Redime puntos libremente o canjea beneficios destacados.
+
+3. **Catálogo:**
+   - Explora los beneficios disponibles.
+   - Usa el buscador por nombre, descripción o rango de puntos.
+   - Haz clic en “Canjear” para obtener un beneficio.
+
+4. **Historial:**
+   - Revisa todas tus transacciones en orden cronológico.
+
+---
+
+## 👨‍💻 Autor
+
+Desarrollado por Felix Sanchez Fandiño  
+© 2025 — Todos los derechos reservados
