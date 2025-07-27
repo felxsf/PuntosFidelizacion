@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import Navbar from "./components/Navbar";
 import { ToastContainer } from "react-toastify";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -32,6 +33,8 @@ export default function App() {
 
           {/* Fallback por si entra a ruta no válida */}
           <Route path="*" element={<Navigate to="/" replace />} />
+          
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />
       </BrowserRouter>
