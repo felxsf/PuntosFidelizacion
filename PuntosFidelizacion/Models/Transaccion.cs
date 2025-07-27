@@ -9,5 +9,8 @@
         public int Puntos { get; set; }
         public string Tipo { get; set; } = string.Empty; // "Otorgar" o "Redimir"
         public string? Observaciones { get; set; }
+        public int? BeneficioId { get; set; }
+        public Beneficio? Beneficio { get; set; } // Navigation property
+
     }
 }

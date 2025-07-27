@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PuntosFidelizacion.Data;
 using PuntosFidelizacion.DTOs;
 using PuntosFidelizacion.Models;
+using PuntosFidelizacion.Services;
 using System.Security.Claims;
+
 
 namespace PuntosFidelizacion.Controllers
 {
@@ -97,5 +100,37 @@ namespace PuntosFidelizacion.Controllers
 
             return Ok(historial);
         }
+
+        [HttpPost("canjear")]
+        [Authorize(Roles = "0")]
+        public async Task<IActionResult> CanjearBeneficio(CanjearBeneficioDto dto)
+        {
+            var userId = JwtHelper.ObtenerIdDesdeToken(User);
+            var usuario = await _context.Usuarios.FindAsync(userId);
+            var beneficio = await _context.Beneficios.FindAsync(dto.BeneficioId);
+
+            if (beneficio == null)
+                return NotFound("Beneficio no encontrado");
+
+            if (usuario.SaldoPuntos < beneficio.CostoEnPuntos)
+                return BadRequest(new { errors = new { Puntos = new[] { "No tienes puntos suficientes para este beneficio." } } });
+
+            usuario.SaldoPuntos -= beneficio.CostoEnPuntos;
+
+            _context.Transacciones.Add(new Transaccion
+            {
+                UsuarioId = usuario.Id,
+                Tipo = "Canje",
+                Puntos = -beneficio.CostoEnPuntos,
+                Fecha = DateTime.Now,
+                BeneficioId = beneficio.Id,
+                Observaciones = "Redención de puntos Beneficio " + beneficio.Nombre
+            });
+
+            await _context.SaveChangesAsync();
+            return Ok(new { mensaje = "Beneficio canjeado exitosamente" });
+        }
+
+
     }
 }

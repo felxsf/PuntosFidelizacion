@@ -9,6 +9,8 @@ import PublicRoute from "./components/PublicRoute";
 import Navbar from "./components/Navbar";
 import { ToastContainer } from "react-toastify";
 import NotFound from "./pages/NotFound";
+import Catalogo from './pages/Catalogo';
+
 
 export default function App() {
   return (
@@ -25,6 +27,7 @@ export default function App() {
           {/* RUTAS PRIVADAS */}
           <Route element={<PrivateRoute allowedRoles={[0]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/catalogo" element={<Catalogo />} />
           </Route>
 
           <Route element={<PrivateRoute allowedRoles={[1]} />}>

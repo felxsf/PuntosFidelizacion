@@ -10,5 +10,7 @@ namespace PuntosFidelizacion.Data
 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Transaccion> Transacciones { get; set; }
+        public DbSet<Beneficio> Beneficios { get; set; }
+
     }
 }
