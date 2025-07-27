@@ -50,7 +50,7 @@ namespace PuntosFidelizacion.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Transacciones");
+                    b.ToTable("Transacciones", (string)null);
                 });
 
             modelBuilder.Entity("PuntosFidelizacion.Models.Usuario", b =>
@@ -81,7 +81,7 @@ namespace PuntosFidelizacion.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("PuntosFidelizacion.Models.Transaccion", b =>
