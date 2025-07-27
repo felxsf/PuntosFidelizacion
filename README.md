@@ -118,4 +118,4 @@ Este es un sistema web completo para gestionar un programa de fidelización empr
 
 ## 📝 Autor
 
-Desarrollado por [Tu Nombre] como solución completa para fidelización de clientes usando tecnologías modernas y buenas prácticas de desarrollo web.
+Desarrollado por Felix Sanchez Fandiño como solución completa para fidelización de clientes usando tecnologías modernas y buenas prácticas de desarrollo web.
