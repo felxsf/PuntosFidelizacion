@@ -16,7 +16,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar /> {/* Se mostrará solo si hay sesión activa */}
+        <Navbar />
         <Routes>
           {/* RUTAS PÚBLICAS: login y registro */}
           <Route element={<PublicRoute />}>
@@ -34,9 +34,7 @@ export default function App() {
             <Route path="/admin" element={<AdminPanel />} />
           </Route>
 
-          {/* Fallback por si entra a ruta no válida */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-          
+          {/* Ruta 404 para rutas no encontradas */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />
