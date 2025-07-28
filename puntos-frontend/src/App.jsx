@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import { ToastContainer } from "react-toastify";
 import NotFound from "./pages/NotFound";
 import Catalogo from './pages/Catalogo';
+import AdminCatalogo from './pages/AdminCatalogo';
 
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
 
           <Route element={<PrivateRoute allowedRoles={[1]} />}>
             <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/AdminCatalogo" element={<AdminCatalogo />} />
           </Route>
 
           {/* Ruta 404 para rutas no encontradas */}
